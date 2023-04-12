@@ -3,10 +3,10 @@ pragma solidity ^0.8.16;
 
 import { console } from "forge-std/Test.sol";
 import { BaseTest } from "./BaseTest.sol";
-import { StringHelper } from "lib_personal/helper/StringHelper.sol";
-import { FuzzRecorder } from "lib_personal/recorder/FuzzRecorder.sol";
-import { VarRecorder } from "lib_personal/recorder/VarRecorder.sol";
-import { TestHelper } from "lib_personal/helper/TestHelper.sol";
+import { StringHelper } from "src/helper/StringHelper.sol";
+import { FuzzRecorder } from "src/recorder/FuzzRecorder.sol";
+import { VarRecorder } from "src/recorder/VarRecorder.sol";
+import { TestHelper } from "src/helper/TestHelper.sol";
 
 contract StringHelper_Test is BaseTest, TestHelper, VarRecorder, FuzzRecorder {
     uint256 public runs;
