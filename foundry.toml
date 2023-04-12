@@ -12,18 +12,6 @@ ffi = true
 [fmt]
 # see prettier
 
-[rpc_endpoints]
-anvil = "http://localhost:8545/"
-goerli = "https://ethereum-goerli-rpc.allthatnode.com"
-sepolia = "https://ethereum-sepolia-rpc.allthatnode.com"
-mainnet = "https://ethereum-mainnet-rpc.allthatnode.com"
-polygon = "https://polygon-mainnet-rpc.allthatnode.com:8545"
-mumbai = "https://polygon-testnet-rpc.allthatnode.com:8545"
-
-[etherscan]
-goerli = { key = "${ETHERSCAN_KEY}" }
-sepolia = { key = "${ETHERSCAN_KEY}" }
-
 [fuzz]
 runs = 256
 max_test_rejects = 65536
