@@ -17,10 +17,6 @@ abstract contract FuzzRecorder is Test, Helpers {
     }*/
     Vm.Log[] internal _logs;
 
-    // todo voir si on peut enregistrer les logs dans un fichier, lors d'un test random
-    // tests random en suivant un workflow au niveau des SaleStatus,  Array ?
-    // print les infos dans un fichier
-
     // Store logs in memory
     function _storeLogs() internal {
         Vm.Log[] memory logs;
