@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/steftroubadour/foundry-test-helpers/branch/main/graph/badge.svg?token=ASa93Efjid)](https://codecov.io/gh/steftroubadour/foundry-test-helpers)
+
 # Library for Foundry/forge tests
 See examples in tests
 

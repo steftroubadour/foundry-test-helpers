@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-import { console } from "forge-std/Test.sol";
-import { BaseTest } from "./utils/BaseTest.sol";
+import { console, Test } from "forge-std/Test.sol";
 import { StringHelper } from "src/helper/StringHelper.sol";
 import { FuzzRecorder } from "src/recorder/FuzzRecorder.sol";
 import { VarRecorder } from "src/recorder/VarRecorder.sol";
 import { TestHelper } from "src/helper/TestHelper.sol";
 
-contract StringHelper_Test is BaseTest, TestHelper, VarRecorder, FuzzRecorder {
-    uint256 public runs;
-
+contract StringHelper_Test is Test, TestHelper, VarRecorder, FuzzRecorder {
     function setUp() public {
         assertTrue(IS_TEST);
 

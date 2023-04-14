@@ -8,6 +8,8 @@ import { RandomHelper } from "../helper/RandomHelper.sol";
 
 // Use to record data between tests, to pass data to another test
 abstract contract VarRecorder is RandomHelper {
+    bool internal debug;
+
     string[] internal testStorages;
     string[] internal fuzzStorages;
     string[] internal helpStorages;

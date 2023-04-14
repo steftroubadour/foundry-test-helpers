@@ -2,13 +2,16 @@
 
 pragma solidity ^0.8.16;
 
-import "forge-std/Test.sol";
-import "../helper/Helpers.sol";
+import { Test, Vm } from "forge-std/Test.sol";
+import { Helpers } from "../helper/Helpers.sol";
+import { VarRecorder } from "src/recorder/VarRecorder.sol";
 
 // Use to record data during the same test
-abstract contract FuzzRecorder is Test, Helpers {
+abstract contract FuzzRecorder is Test, Helpers, VarRecorder {
     bool internal record;
     bool internal displayRecords;
+
+    uint256 public runs;
 
     /*struct Log {
         bytes32[] topics;
@@ -73,5 +76,43 @@ abstract contract FuzzRecorder is Test, Helpers {
     //_writeNewLine("debug.txt", string.concat("tokenId: ", vm.toString(tokenId)));
     function _writeNewLine(string memory filename, string memory data) internal {
         vm.writeLine(string.concat("./records/", filename), data);
+    }
+
+    function _newTable(
+        string memory counterName,
+        string memory fileName,
+        string[] memory data
+    ) internal {
+        _initializeUintVar(counterName, 0); // var exist now & it's the first run
+
+        string memory headLine = "| # |";
+        string memory headLineSeparator = "|-----|";
+        for (uint256 i; i < data.length; i++) {
+            headLine = string.concat(headLine, " ", data[i], " |");
+            headLineSeparator = string.concat(headLineSeparator, "-----------|");
+        }
+
+        _writeNewLine(fileName, "");
+        _writeNewLine(fileName, headLine);
+        _writeNewLine(fileName, headLineSeparator);
+    }
+
+    function _writeLogInTable(
+        string memory counterName,
+        string memory fileName,
+        string[] memory data
+    ) internal {
+        _incrementUintVar(counterName);
+
+        uint256 iteration = _readUintVar(counterName);
+        string memory line = string.concat("| ", vm.toString(iteration), " |");
+        for (uint256 i; i < data.length; i++) {
+            line = string.concat(line, " ", data[i], " | ");
+        }
+
+        _writeNewLine(fileName, line);
+
+        // End of the fuzz test
+        if (iteration == runs) _removeVar(counterName);
     }
 }

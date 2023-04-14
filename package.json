@@ -5,10 +5,9 @@
   "author": "steftroubadour",
   "license": "MIT",
   "devDependencies": {
+    "@openzeppelin/contracts": "^4.8.0",
     "prettier": "^2.7.1",
     "prettier-plugin-solidity": "^1.0.0-beta.24",
-    "@openzeppelin/contracts": "^4.8.0"
-  },
-  "dependencies": {
+    "solhint": "^3.4.1"
   }
 }

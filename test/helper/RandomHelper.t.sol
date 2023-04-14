@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-import { console } from "forge-std/Test.sol";
-import { BaseTest } from "./utils/BaseTest.sol";
+import { console, Test } from "forge-std/Test.sol";
 import { RandomHelper } from "src/helper/RandomHelper.sol";
 import { FuzzRecorder } from "src/recorder/FuzzRecorder.sol";
-import { VarRecorder } from "src/recorder/VarRecorder.sol";
 import { TestHelper } from "src/helper/TestHelper.sol";
 
-contract RandomHelper_Test is BaseTest, TestHelper, RandomHelper, VarRecorder, FuzzRecorder {
-    uint256 public runs;
-
+contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
     function setUp() public {
         assertTrue(IS_TEST);
 
@@ -56,52 +52,21 @@ contract RandomHelper_Test is BaseTest, TestHelper, RandomHelper, VarRecorder, F
         assertLe(randomNumber, max);
     }
 
-    function _newTable(
-        string memory counterName,
-        string memory fileName,
-        string[] memory data
-    ) internal {
-        _initializeUintVar(counterName, 0); // var exist now & it's the first run
-
-        string memory headLine = "| # |";
-        string memory headLineSeparator = "|-----|";
-        for (uint256 i; i < data.length; i++) {
-            headLine = string.concat(headLine, " ", data[i], " |");
-            headLineSeparator = string.concat(headLineSeparator, "-----------|");
-        }
-
-        _writeNewLine(fileName, "");
-        _writeNewLine(fileName, headLine);
-        _writeNewLine(fileName, headLineSeparator);
-    }
-
-    function _writeLogInTable(
-        string memory counterName,
-        string memory fileName,
-        string[] memory data
-    ) internal {
-        _incrementUintVar(counterName);
-
-        uint256 iteration = _readUintVar(counterName);
-        string memory line = string.concat("| ", vm.toString(iteration), " |");
-        for (uint256 i; i < data.length; i++) {
-            line = string.concat(line, " ", data[i], " | ");
-        }
-
-        _writeNewLine(fileName, line);
-
-        // End of the fuzz test
-        if (iteration == runs) _removeVar(counterName);
-    }
-
     // todo, for best tests, improve using statistics calculations, recording random data in a file
     // ☢️Test will be slow, but there is not other way to do this
 
     function test_getDifferentRandomNumbers(uint256 n, uint256 min, uint256 max) public {
-        string memory testName;
-        string memory logFile;
-        string memory counterName;
+        uint256 maxDifferentNumbers = 20;
+        n = bound(n, 5, maxDifferentNumbers);
+        min = bound(min, 0, 1000);
+        // ensure enough large range between min and max : min + maxDifferentNumbers * 10
+        max = bound(max, min + maxDifferentNumbers + 10, 10 ** 6);
+
+        //################ DEBUG ####################
         if (debug) {
+            string memory testName;
+            string memory logFile;
+            string memory counterName;
             testName = "test_getDifferentRandomNumbers";
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
@@ -116,21 +81,14 @@ contract RandomHelper_Test is BaseTest, TestHelper, RandomHelper, VarRecorder, F
                 data[2] = "max";
                 _newTable(counterName, logFile, data);
             }
-        }
 
-        uint256 maxDifferentNumbers = 20;
-        n = bound(n, 5, maxDifferentNumbers);
-        min = bound(min, 0, 1000);
-        // ensure enough large range between min and max : min + maxDifferentNumbers * 10
-        max = bound(max, min + maxDifferentNumbers + 10, 10 ** 6);
-
-        if (debug) {
             string[] memory data = new string[](3);
             data[0] = vm.toString(n);
             data[1] = vm.toString(min);
             data[2] = vm.toString(max);
             _writeLogInTable(counterName, logFile, data);
         }
+        //###########################################
 
         uint256[] memory randomNumbers = _getDifferentRandomNumbers(n, min, max);
 

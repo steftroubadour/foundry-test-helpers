@@ -91,4 +91,13 @@ abstract contract TestHelper is TestBase, StringHelper {
 
         return vm.parseUint(_slice(bytes(varName).length + 4, bytes(line).length, line));
     }
+
+    function _toMemory(uint256[] storage a) internal view returns (uint256[] memory) {
+        uint256[] memory b = new uint256[](a.length);
+        for (uint n = 0; n < a.length; n++) {
+            b[n] = a[n];
+        }
+
+        return b;
+    }
 }
