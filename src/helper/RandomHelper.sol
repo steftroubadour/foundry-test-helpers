@@ -29,7 +29,7 @@ abstract contract RandomHelper is Test, StringHelper {
         return min + rem;
     }
 
-    function _getRandomNumber(uint256 min, uint256 max) public returns (uint256) {
+    function getRandomNumber(uint256 min, uint256 max) public returns (uint256) {
         // Works with ffi=true in foundry.toml
         // Called two times in the same function, results will be differents, not true with $RANDOM
         // Problem: Sometimes vm.ffi() with 'shuf' returns bytes of digits between 0x30 and 0x39
@@ -70,7 +70,7 @@ abstract contract RandomHelper is Test, StringHelper {
     // Requirements
     // n <= 20;
     // max >= min + n + 3
-    function _getDifferentRandomNumbers(
+    function getDifferentRandomNumbers(
         uint256 n,
         uint256 min,
         uint256 max
@@ -89,7 +89,7 @@ abstract contract RandomHelper is Test, StringHelper {
 
             while (isAlreadyPresent) {
                 isAlreadyPresent = false;
-                randomNumber = _simpleBound(_getRandomNumber(min, max2), min, max);
+                randomNumber = _simpleBound(getRandomNumber(min, max2), min, max);
 
                 for (uint256 j; j < i; j++) {
                     if (randomNumber == tempNumbers[j]) {

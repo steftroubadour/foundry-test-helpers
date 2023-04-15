@@ -14,91 +14,91 @@ abstract contract VarRecorder is RandomHelper {
     string[] internal fuzzStorages;
     string[] internal helpStorages;
 
-    function _initialiseStorages() internal {
+    function initialiseStorages() public {
         for (uint256 i; i < 10; i++) {
-            testStorages.push(vm.toString(_getRandomNumber(10 ** 18, 10 ** 19 - 1)));
+            testStorages.push(vm.toString(getRandomNumber(10 ** 18, 10 ** 19 - 1)));
         }
 
         for (uint256 j; j < 10; j++) {
-            fuzzStorages.push(vm.toString(_getRandomNumber(10 ** 17, 10 ** 18 - 1)));
+            fuzzStorages.push(vm.toString(getRandomNumber(10 ** 17, 10 ** 18 - 1)));
         }
 
         for (uint256 j; j < 10; j++) {
-            helpStorages.push(vm.toString(_getRandomNumber(10 ** 16, 10 ** 17 - 1)));
+            helpStorages.push(vm.toString(getRandomNumber(10 ** 16, 10 ** 17 - 1)));
         }
     }
 
-    function _getVarPath(string memory name) internal pure returns (string memory) {
+    function getVarPath(string memory name) public pure returns (string memory) {
         return string.concat("./records/", name, ".txt");
     }
 
-    function _closeVar(string memory name) internal {
-        vm.closeFile(_getVarPath(name));
+    function closeVar(string memory name) public {
+        vm.closeFile(getVarPath(name));
     }
 
-    function _removeVar(string memory name) internal {
-        vm.removeFile(_getVarPath(name));
+    function removeVar(string memory name) public {
+        vm.removeFile(getVarPath(name));
     }
 
-    function _isVarExist(string memory name) internal view returns (bool) {
-        bool isVarExist;
-        try vm.readFile(_getVarPath(name)) {
-            isVarExist = true;
+    function isVarExist(string memory name) public view returns (bool) {
+        bool _isVarExist;
+        try vm.readFile(getVarPath(name)) {
+            _isVarExist = true;
         } catch {}
 
-        return isVarExist;
+        return _isVarExist;
     }
 
-    function _readUintVar(string memory name) internal returns (uint256) {
-        string memory path = _getVarPath(name);
+    function readUintVar(string memory name) public returns (uint256) {
+        string memory path = getVarPath(name);
         vm.closeFile(path);
 
         return vm.parseUint(vm.readLine(path));
     }
 
-    function _incrementUintVar(string memory name) internal {
-        uint256 value = _readUintVar(name);
+    function incrementUintVar(string memory name) public {
+        uint256 value = readUintVar(name);
 
-        vm.writeFile(_getVarPath(name), vm.toString(++value));
+        vm.writeFile(getVarPath(name), vm.toString(++value));
     }
 
-    function _initializeUintVar(string memory name, uint256 value) internal {
-        vm.writeFile(_getVarPath(name), vm.toString(value));
+    function initializeUintVar(string memory name, uint256 value) public {
+        vm.writeFile(getVarPath(name), vm.toString(value));
     }
 
-    function _getStoragePath(string memory name) internal pure returns (string memory) {
+    function getStoragePath(string memory name) public pure returns (string memory) {
         return string.concat("./records/", name, ".json");
     }
 
-    function _closeStorage(string memory name) internal {
-        vm.closeFile(_getStoragePath(name));
+    function closeStorage(string memory name) public {
+        vm.closeFile(getStoragePath(name));
     }
 
-    function _removeStorage(string memory name) internal {
-        vm.removeFile(_getStoragePath(name));
+    function removeStorage(string memory name) public {
+        vm.removeFile(getStoragePath(name));
     }
 
-    function _isStorageInUse(string memory name) internal view returns (bool) {
-        bool isStorageInUse;
+    function isStorageInUse(string memory name) public view returns (bool) {
+        bool _isStorageInUse;
 
-        try vm.readFile(_getStoragePath(name)) {
-            isStorageInUse = true;
+        try vm.readFile(getStoragePath(name)) {
+            _isStorageInUse = true;
         } catch {}
 
-        return isStorageInUse;
+        return _isStorageInUse;
     }
 
-    function _initStorage(string memory name) internal {
-        string memory path = _getStoragePath(name);
-        if (_isStorageInUse(name)) return;
+    function initStorage(string memory name) public {
+        string memory path = getStoragePath(name);
+        if (isStorageInUse(name)) return;
 
         vm.writeJson("{}", path);
     }
 
-    function _initStorage(string memory name, string[] memory keys) internal {
-        string memory path = _getStoragePath(name);
+    function initStorage(string memory name, string[] memory keys) public {
+        string memory path = getStoragePath(name);
 
-        if (_isStorageInUse(name)) return;
+        if (isStorageInUse(name)) return;
 
         string memory jsonObj = "json";
         string memory finalJson;
@@ -108,26 +108,26 @@ abstract contract VarRecorder is RandomHelper {
         vm.writeJson(finalJson, path);
     }
 
-    function _readStorageUintKey(string memory name, string memory key) internal returns (uint256) {
-        string memory path = _getStoragePath(name);
+    function readStorageUintKey(string memory name, string memory key) public returns (uint256) {
+        string memory path = getStoragePath(name);
         vm.closeFile(path);
         string memory jsonFile = vm.readFile(path);
 
         return vm.parseJsonUint(jsonFile, string.concat(".", key));
     }
 
-    function _saveStorageUintKey(string memory name, string memory key, uint256 value) internal {
-        string memory path = _getStoragePath(name);
+    function saveStorageUintKey(string memory name, string memory key, uint256 value) public {
+        string memory path = getStoragePath(name);
 
-        if (!_isStorageInUse(name)) return;
+        if (!isStorageInUse(name)) return;
 
         vm.writeJson(vm.toString(value), path, string.concat(".", key));
     }
 
-    function _incrementStorageUintKey(string memory name, string memory key) internal {
-        string memory path = _getStoragePath(name);
-        uint256 value = _readStorageUintKey(name, key);
+    function incrementStorageUintKey(string memory name, string memory key) public {
+        string memory path = getStoragePath(name);
+        uint256 value = readStorageUintKey(name, key);
         vm.closeFile(path);
-        _saveStorageUintKey(name, key, ++value);
+        saveStorageUintKey(name, key, ++value);
     }
 }

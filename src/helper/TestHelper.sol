@@ -55,7 +55,7 @@ abstract contract TestHelper is Test, RandomHelper {
         assert(max < runs);
         uint256 number;
         if (withFfi) {
-            number = _getRandomNumber(1, runs);
+            number = getRandomNumber(1, runs);
         } else {
             number = bound2(randomNumber, 1, runs);
         }

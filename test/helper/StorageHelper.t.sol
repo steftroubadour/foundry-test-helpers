@@ -45,18 +45,18 @@ contract StorageHelper_Test is Test, StorageHelper {
         // Read
         uint256 returnedValue = example.counter();
 
-        bytes32[] memory lastReadSlots = t._getLastReadSlots(address(example));
+        bytes32[] memory lastReadSlots = t.getLastReadSlots(address(example));
 
         assertEq(lastReadSlots.length, 1); // one value expected
         // lastReadSlots[0] is the bytes32 slot value.
         assertEq(uint256(vm.load(address(example), lastReadSlots[0])), returnedValue);
 
-        // Each time vm.accesses is used in _getLastReadSlots, records are reset.
-        lastReadSlots = t._getLastReadSlots(address(example));
+        // Each time vm.accesses is used in getLastReadSlots, records are reset.
+        lastReadSlots = t.getLastReadSlots(address(example));
         assertEq(lastReadSlots.length, 0);
 
         address returnedAddress = example.getAddress(200);
-        lastReadSlots = t._getLastReadSlots(address(example));
+        lastReadSlots = t.getLastReadSlots(address(example));
         assertEq(lastReadSlots.length, 1);
         assertEq(
             address(uint160(uint256(vm.load(address(example), lastReadSlots[0])))),
@@ -71,19 +71,19 @@ contract StorageHelper_Test is Test, StorageHelper {
         uint256 setValue = 32;
         example.setCounter(setValue);
 
-        bytes32[] memory lastWrittenSlots = t._getLastWrittenSlots(address(example));
+        bytes32[] memory lastWrittenSlots = t.getLastWrittenSlots(address(example));
 
         assertEq(lastWrittenSlots.length, 1); // one value expected
         // lastReadSlots[0] is the bytes32 slot value.
         assertEq(uint256(vm.load(address(example), lastWrittenSlots[0])), setValue);
 
-        // Each time vm.accesses is used in _getLastWrittenSlots, records are reset.
-        lastWrittenSlots = t._getLastWrittenSlots(address(example));
+        // Each time vm.accesses is used in getLastWrittenSlots, records are reset.
+        lastWrittenSlots = t.getLastWrittenSlots(address(example));
         assertEq(lastWrittenSlots.length, 0);
 
         address addressSet = address(0x70997970C51812dc3A010C7d01b50e0d17dc79C8);
         example.setAddress(200, addressSet);
-        lastWrittenSlots = t._getLastWrittenSlots(address(example));
+        lastWrittenSlots = t.getLastWrittenSlots(address(example));
         assertEq(lastWrittenSlots.length, 1);
         assertEq(
             address(uint160(uint256(vm.load(address(example), lastWrittenSlots[0])))),

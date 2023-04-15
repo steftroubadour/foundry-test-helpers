@@ -32,7 +32,7 @@ contract TestHelper_Test is Test, FuzzRecorder {
         //debug = true;
 
         // To use VarRecorder
-        _initialiseStorages();
+        initialiseStorages();
         runs = readFoundryTomlValue("[fuzz]", "runs");
     }
 
@@ -51,29 +51,29 @@ contract TestHelper_Test is Test, FuzzRecorder {
         uint valueExpected = 10;
         bool mustExecuteTest = t.mustExecuteTest(number, valueExpected, runs, false);
 
-        if (!_isVarExist(trueCounterName)) _initializeUintVar(trueCounterName, 0);
-        if (!_isVarExist(iterationCounterName)) {
-            _initializeUintVar(iterationCounterName, 1);
+        if (!isVarExist(trueCounterName)) initializeUintVar(trueCounterName, 0);
+        if (!isVarExist(iterationCounterName)) {
+            initializeUintVar(iterationCounterName, 1);
         } else {
-            _incrementUintVar(iterationCounterName);
+            incrementUintVar(iterationCounterName);
         }
         //// useful for 'forge coverage --report summary', don't know why !
-        if (!_isVarExist("trueCounterName-runs")) _initializeUintVar("trueCounterName-runs", runs);
+        if (!isVarExist("trueCounterName-runs")) initializeUintVar("trueCounterName-runs", runs);
         ////
 
-        if (mustExecuteTest) _incrementUintVar(trueCounterName);
+        if (mustExecuteTest) incrementUintVar(trueCounterName);
 
         // Last iteration
-        if (_readUintVar(iterationCounterName) == runs) {
+        if (readUintVar(iterationCounterName) == runs) {
             //uint param1 = 150;
             //uint param2 = 50;
-            uint trueCounter = _readUintVar(trueCounterName);
+            uint trueCounter = readUintVar(trueCounterName);
             //assertLt(trueCounter, (valueExpected * param1) / 100);
             //assertGt(trueCounter, (valueExpected * param2) / 100);
             assertGt(trueCounter, 0);
-            _removeVar(iterationCounterName);
-            _removeVar(trueCounterName);
-            _removeVar("trueCounterName-runs");
+            removeVar(iterationCounterName);
+            removeVar(trueCounterName);
+            removeVar("trueCounterName-runs");
         }
 
         //################ DEBUG ####################
@@ -83,19 +83,19 @@ contract TestHelper_Test is Test, FuzzRecorder {
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
             string[] memory data;
-            if (!_isVarExist(counterName)) {
-                _writeNewFile(logFile, "");
-                _writeNewLine(logFile, string.concat("# ", testName, " logs"));
-                _writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
-                _writeNewLine(logFile, "");
+            if (!isVarExist(counterName)) {
+                writeNewFile(logFile, "");
+                writeNewLine(logFile, string.concat("# ", testName, " logs"));
+                writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
+                writeNewLine(logFile, "");
                 data = new string[](1);
                 data[0] = "mustExecuteTest";
-                _newTable(counterName, logFile, data);
+                newTable(counterName, logFile, data);
             }
 
             data = new string[](1);
             data[0] = vm.toString(mustExecuteTest);
-            _writeLogInTable(counterName, logFile, data);
+            writeDataInTable(counterName, logFile, data);
         }
         //###########################################
     }

@@ -23,36 +23,36 @@ contract RandomHelper_Test is Test, Helpers, FuzzRecorder {
         debug = true;
 
         // To use VarRecorder
-        _initialiseStorages();
+        initialiseStorages();
         runs = readFoundryTomlValue("[fuzz]", "runs");
     }
 
     function test_getRandomNumber_smallestRange(uint256) public {
         uint256 min = 0;
         uint256 max = 1;
-        uint256 randomNumber = t._getRandomNumber(min, max);
+        uint256 randomNumber = t.getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
         // To see if sequence is really random
         // Erase test.txt file and uncomment next line
-        //_writeNewLine("test.txt", string.concat("randomNumber: ", vm.toString(randomNumber)));
+        //writeNewLine("test.txt", string.concat("randomNumber: ", vm.toString(randomNumber)));
     }
 
     function test_getRandomNumber_smallRange(uint256) public {
         uint256 min = 1;
         uint256 max = 5;
-        uint256 randomNumber = t._getRandomNumber(min, max);
+        uint256 randomNumber = t.getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
         // To see if sequence is really random
         // Erase test.txt file and uncomment next line
-        //_writeNewLine("test.txt", string.concat("randomNumber: ", vm.toString(randomNumber)));
+        //writeNewLine("test.txt", string.concat("randomNumber: ", vm.toString(randomNumber)));
     }
 
     function test_getRandomNumber(uint256 min, uint256 max) public {
         min = bound(min, 0, 1000);
         max = bound(max, min, 10 ** 9);
-        uint256 randomNumber = t._getRandomNumber(min, max);
+        uint256 randomNumber = t.getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
     }
@@ -76,27 +76,27 @@ contract RandomHelper_Test is Test, Helpers, FuzzRecorder {
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
             string[] memory data;
-            if (!_isVarExist(counterName)) {
-                _writeNewFile(logFile, "");
-                _writeNewLine(logFile, string.concat("# ", testName, " logs"));
-                _writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
-                _writeNewLine(logFile, "");
+            if (!isVarExist(counterName)) {
+                writeNewFile(logFile, "");
+                writeNewLine(logFile, string.concat("# ", testName, " logs"));
+                writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
+                writeNewLine(logFile, "");
                 data = new string[](3);
                 data[0] = "n";
                 data[1] = "min";
                 data[2] = "max";
-                _newTable(counterName, logFile, data);
+                newTable(counterName, logFile, data);
             }
 
             data = new string[](3);
             data[0] = vm.toString(n);
             data[1] = vm.toString(min);
             data[2] = vm.toString(max);
-            _writeLogInTable(counterName, logFile, data);
+            writeDataInTable(counterName, logFile, data);
         }
         //###########################################
 
-        uint256[] memory randomNumbers = t._getDifferentRandomNumbers(n, min, max);
+        uint256[] memory randomNumbers = t.getDifferentRandomNumbers(n, min, max);
 
         bool isAlreadyPresent;
 
@@ -124,16 +124,16 @@ contract RandomHelper_Test is Test, Helpers, FuzzRecorder {
             testName = "test_getDifferentRandomNumbers_withSmallRange";
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
-            if (!_isVarExist(counterName)) {
-                _writeNewFile(logFile, "");
-                _writeNewLine(logFile, string.concat("# ", testName, " logs"));
-                _writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
-                _writeNewLine(logFile, "");
+            if (!isVarExist(counterName)) {
+                writeNewFile(logFile, "");
+                writeNewLine(logFile, string.concat("# ", testName, " logs"));
+                writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
+                writeNewLine(logFile, "");
                 string[] memory data = new string[](3);
                 data[0] = "n";
                 data[1] = "min";
                 data[2] = "max";
-                _newTable(counterName, logFile, data);
+                newTable(counterName, logFile, data);
             }
         }
 
@@ -147,10 +147,10 @@ contract RandomHelper_Test is Test, Helpers, FuzzRecorder {
             data[0] = vm.toString(n);
             data[1] = vm.toString(min);
             data[2] = vm.toString(max);
-            _writeLogInTable(counterName, logFile, data);
+            writeDataInTable(counterName, logFile, data);
         }
 
-        uint256[] memory randomNumbers = t._getDifferentRandomNumbers(n, min, max);
+        uint256[] memory randomNumbers = t.getDifferentRandomNumbers(n, min, max);
 
         bool isAlreadyPresent;
 

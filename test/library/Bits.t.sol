@@ -20,7 +20,7 @@ contract Bits_Test is Test, FuzzRecorder {
         debug = true;
 
         // To use VarRecorder
-        _initialiseStorages();
+        initialiseStorages();
         runs = readFoundryTomlValue("[fuzz]", "runs");
     }
 
@@ -65,16 +65,16 @@ contract Bits_Test is Test, FuzzRecorder {
             testName = "test4getLastNBits";
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
-            if (!_isVarExist(counterName)) {
-                _writeNewFile(logFile, "");
-                _writeNewLine(logFile, string.concat("# ", testName, " logs"));
-                _writeNewLine(logFile, "");
+            if (!isVarExist(counterName)) {
+                writeNewFile(logFile, "");
+                writeNewLine(logFile, string.concat("# ", testName, " logs"));
+                writeNewLine(logFile, "");
                 data = new string[](4);
                 data[0] = "n";
                 data[1] = "othersBits";
                 data[2] = "lastNBits";
                 data[3] = "number";
-                _newTable(counterName, logFile, data);
+                newTable(counterName, logFile, data);
             }
 
             data = new string[](4);
@@ -82,7 +82,7 @@ contract Bits_Test is Test, FuzzRecorder {
             data[1] = vm.toString(othersBits);
             data[2] = vm.toString(lastNBits);
             data[3] = vm.toString(number);
-            _writeLogInTable(counterName, logFile, data);
+            writeDataInTable(counterName, logFile, data);
         }
         //###########################################
 

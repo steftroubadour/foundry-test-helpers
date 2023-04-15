@@ -25,7 +25,7 @@ other useful function for tests
 to record some data (like counter) a file during tests.
 Useful to initialize a fuzz test.
 
-`if (!_isVarExist(counterName)) {` ... initialize fuzz test `}`
+`if (!isVarExist(counterName)) {` ... initialize fuzz test `}`
 
 ### Fuzz recorder
 to record data (like logs) in a file during same test.

@@ -18,10 +18,10 @@ abstract contract FuzzRecorder is Test, Helpers, VarRecorder {
         bytes data;
         address emitter;
     }*/
-    Vm.Log[] internal _logs;
+    /*Vm.Log[] internal _logs;
 
     // Store logs in memory
-    function _storeLogs() internal {
+    function storeLogs() public {
         Vm.Log[] memory logs;
         logs = vm.getRecordedLogs();
 
@@ -31,12 +31,12 @@ abstract contract FuzzRecorder is Test, Helpers, VarRecorder {
     }
 
     // Serialize logs
-    function _serializeLogs() internal returns (string memory) {
-        /*struct Log {
+    function serializeLogs() public returns (string memory) {
+        */ /*struct Log {
             bytes32[] topics;
             bytes data;
             address emitter;
-        }*/
+        }*/ /*
 
         string memory finalJson = "[";
         for (uint256 i; i < _logs.length; i++) {
@@ -57,33 +57,33 @@ abstract contract FuzzRecorder is Test, Helpers, VarRecorder {
         return string.concat(finalJson, "]");
     }
 
-    function _printLogs() internal {
+    function printLogs() public {
         // ...
     }
 
     // Save logs in a file
-    function _saveLogs() internal {
-        // logs must be stored before : _storeLogs();
-        vm.writeJson(_serializeLogs(), "./output/records.json");
-    }
+    function saveLogs() public {
+        // logs must be stored before : storeLogs();
+        vm.writeJson(serializeLogs(), "./output/records.json");
+    }*/
 
-    function _writeNewFile(string memory filename, string memory data) internal {
+    function writeNewFile(string memory filename, string memory data) public {
         vm.writeFile(string.concat("./records/", filename), data);
     }
 
     // Used to debug fuzz test
     // Erase debug.txt before
-    //_writeNewLine("debug.txt", string.concat("tokenId: ", vm.toString(tokenId)));
-    function _writeNewLine(string memory filename, string memory data) internal {
+    //writeNewLine("debug.txt", string.concat("tokenId: ", vm.toString(tokenId)));
+    function writeNewLine(string memory filename, string memory data) public {
         vm.writeLine(string.concat("./records/", filename), data);
     }
 
-    function _newTable(
+    function newTable(
         string memory counterName,
         string memory fileName,
         string[] memory data
-    ) internal {
-        _initializeUintVar(counterName, 0); // var exist now & it's the first run
+    ) public {
+        initializeUintVar(counterName, 0); // var exist now & it's the first run
 
         string memory headLine = "| # |";
         string memory headLineSeparator = "|-----|";
@@ -92,27 +92,27 @@ abstract contract FuzzRecorder is Test, Helpers, VarRecorder {
             headLineSeparator = string.concat(headLineSeparator, "-----------|");
         }
 
-        _writeNewLine(fileName, "");
-        _writeNewLine(fileName, headLine);
-        _writeNewLine(fileName, headLineSeparator);
+        writeNewLine(fileName, "");
+        writeNewLine(fileName, headLine);
+        writeNewLine(fileName, headLineSeparator);
     }
 
-    function _writeLogInTable(
+    function writeDataInTable(
         string memory counterName,
         string memory fileName,
         string[] memory data
-    ) internal {
-        _incrementUintVar(counterName);
+    ) public {
+        incrementUintVar(counterName);
 
-        uint256 iteration = _readUintVar(counterName);
+        uint256 iteration = readUintVar(counterName);
         string memory line = string.concat("| ", vm.toString(iteration), " |");
         for (uint256 i; i < data.length; i++) {
             line = string.concat(line, " ", data[i], " | ");
         }
 
-        _writeNewLine(fileName, line);
+        writeNewLine(fileName, line);
 
         // End of the fuzz test
-        if (iteration == runs) _removeVar(counterName);
+        if (iteration == runs) removeVar(counterName);
     }
 }

@@ -18,12 +18,12 @@ abstract contract StorageHelper is Test {
     // assertEq(lastWrittenSlots.length, 1); // one value expected
     // lastWrittenSlots[0] is the bytes32 slot value.
     // You can retrieve value with vm.load(contractAddress, lastWrittenSlots[0]);
-    function _getLastWrittenSlots(address contractAddress) public returns (bytes32[] memory) {
+    function getLastWrittenSlots(address contractAddress) public returns (bytes32[] memory) {
         (, bytes32[] memory writes) = vm.accesses(contractAddress);
         return writes;
     }
 
-    function _getLastReadSlots(address contractAddress) public returns (bytes32[] memory) {
+    function getLastReadSlots(address contractAddress) public returns (bytes32[] memory) {
         (bytes32[] memory reads, ) = vm.accesses(contractAddress);
         return reads;
     }
