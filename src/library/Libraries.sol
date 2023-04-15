@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.16;
 
-import { Arrays } from "src/library/Arrays.sol";
-import { Bits } from "src/library/Bits.sol";
+import { Arrays } from "./Arrays.sol";
+import { Bits } from "./Bits.sol";
 
 library Libraries {}

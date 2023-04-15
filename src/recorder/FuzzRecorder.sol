@@ -4,7 +4,7 @@ pragma solidity ^0.8.16;
 
 import { Test, Vm } from "forge-std/Test.sol";
 import { Helpers } from "../helper/Helpers.sol";
-import { VarRecorder } from "src/recorder/VarRecorder.sol";
+import { VarRecorder } from "./VarRecorder.sol";
 
 // Use to record data during the same test
 abstract contract FuzzRecorder is Test, Helpers, VarRecorder {

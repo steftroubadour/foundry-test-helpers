@@ -3,7 +3,7 @@
 pragma solidity ^0.8.16;
 
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import { Bits } from "src/library/Bits.sol";
+import { Bits } from "./Bits.sol";
 
 library Arrays {
     // Equals at each rank
