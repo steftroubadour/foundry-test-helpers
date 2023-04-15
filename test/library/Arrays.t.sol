@@ -8,8 +8,6 @@ import { Helpers } from "src/helper/Helpers.sol";
 contract Arrays_Test is Test, Helpers {
     uint256[] public a;
     uint256[] public b;
-    uint8[] public a8;
-    uint8[] public b8;
 
     function setUp() public {
         assertTrue(IS_TEST);
@@ -26,13 +24,21 @@ contract Arrays_Test is Test, Helpers {
     }
 
     function test4areEquals_uint8() public {
-        a8 = [0, 1, 2, 3, 4];
-        b8 = [0, 1, 2, 3, 4];
+        uint8[] memory a8 = new uint8[](4);
+        a8[0] = 0;
+        a8[1] = 1;
+        a8[2] = 2;
+        a8[3] = 3;
+        uint8[] memory b8 = new uint8[](4);
+        b8[0] = 0;
+        b8[1] = 1;
+        b8[2] = 2;
+        b8[3] = 3;
 
-        assertTrue(Arrays.areEquals(_toMemory(a), _toMemory(b)));
+        assertTrue(Arrays.areEquals(a8, b8));
 
         b8[3] = 1;
-        assertFalse(Arrays.areEquals(_toMemory(a), _toMemory(b)));
+        assertFalse(Arrays.areEquals(a8, b8));
     }
 
     function test4areEquals(uint number, uint length) public {
@@ -53,11 +59,6 @@ contract Arrays_Test is Test, Helpers {
     }
 
     function test4toString_uint8() public {
-        a = [uint(1), 2, 3];
-        assertEq(Arrays.toString(Arrays.toUint8Array(_toMemory(a))), "[1, 2, 3](3)");
-    }
-
-    function test4fillWithValues() public {
         a = [uint(1), 2, 3];
         assertEq(Arrays.toString(Arrays.toUint8Array(_toMemory(a))), "[1, 2, 3](3)");
     }
