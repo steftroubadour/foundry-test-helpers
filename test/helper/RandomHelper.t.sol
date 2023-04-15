@@ -2,14 +2,19 @@
 pragma solidity ^0.8.16;
 
 import { console, Test } from "forge-std/Test.sol";
-import { RandomHelper } from "src/helper/RandomHelper.sol";
+import { Helpers } from "src/helper/Helpers.sol";
 import { FuzzRecorder } from "src/recorder/FuzzRecorder.sol";
-import { TestHelper } from "src/helper/TestHelper.sol";
+import { RandomHelper } from "src/helper/RandomHelper.sol";
 
-contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
+contract RandomHelper_ is RandomHelper {}
+
+contract RandomHelper_Test is Test, Helpers, FuzzRecorder {
+    RandomHelper_ t;
+
     function setUp() public {
         assertTrue(IS_TEST);
 
+        t = new RandomHelper_();
         // Uncomment to debug tests
         //_initDebug();
     }
@@ -19,13 +24,13 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
 
         // To use VarRecorder
         _initialiseStorages();
-        runs = _readFoundryTomlValue("[fuzz]", "runs");
+        runs = readFoundryTomlValue("[fuzz]", "runs");
     }
 
     function test_getRandomNumber_smallestRange(uint256) public {
         uint256 min = 0;
         uint256 max = 1;
-        uint256 randomNumber = _getRandomNumber(min, max);
+        uint256 randomNumber = t._getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
         // To see if sequence is really random
@@ -36,7 +41,7 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
     function test_getRandomNumber_smallRange(uint256) public {
         uint256 min = 1;
         uint256 max = 5;
-        uint256 randomNumber = _getRandomNumber(min, max);
+        uint256 randomNumber = t._getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
         // To see if sequence is really random
@@ -47,7 +52,7 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
     function test_getRandomNumber(uint256 min, uint256 max) public {
         min = bound(min, 0, 1000);
         max = bound(max, min, 10 ** 9);
-        uint256 randomNumber = _getRandomNumber(min, max);
+        uint256 randomNumber = t._getRandomNumber(min, max);
         assertGe(randomNumber, min);
         assertLe(randomNumber, max);
     }
@@ -70,19 +75,20 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
             testName = "test_getDifferentRandomNumbers";
             logFile = string.concat(testName, ".md");
             counterName = string.concat(testName, "-", fuzzStorages[0]);
+            string[] memory data;
             if (!_isVarExist(counterName)) {
                 _writeNewFile(logFile, "");
                 _writeNewLine(logFile, string.concat("# ", testName, " logs"));
                 _writeNewLine(logFile, string.concat("runs ", vm.toString(runs)));
                 _writeNewLine(logFile, "");
-                string[] memory data = new string[](3);
+                data = new string[](3);
                 data[0] = "n";
                 data[1] = "min";
                 data[2] = "max";
                 _newTable(counterName, logFile, data);
             }
 
-            string[] memory data = new string[](3);
+            data = new string[](3);
             data[0] = vm.toString(n);
             data[1] = vm.toString(min);
             data[2] = vm.toString(max);
@@ -90,7 +96,7 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
         }
         //###########################################
 
-        uint256[] memory randomNumbers = _getDifferentRandomNumbers(n, min, max);
+        uint256[] memory randomNumbers = t._getDifferentRandomNumbers(n, min, max);
 
         bool isAlreadyPresent;
 
@@ -144,7 +150,7 @@ contract RandomHelper_Test is Test, TestHelper, RandomHelper, FuzzRecorder {
             _writeLogInTable(counterName, logFile, data);
         }
 
-        uint256[] memory randomNumbers = _getDifferentRandomNumbers(n, min, max);
+        uint256[] memory randomNumbers = t._getDifferentRandomNumbers(n, min, max);
 
         bool isAlreadyPresent;
 

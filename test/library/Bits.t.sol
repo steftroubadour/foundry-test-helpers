@@ -21,7 +21,7 @@ contract Bits_Test is Test, FuzzRecorder {
 
         // To use VarRecorder
         _initialiseStorages();
-        runs = _readFoundryTomlValue("[fuzz]", "runs");
+        runs = readFoundryTomlValue("[fuzz]", "runs");
     }
 
     function test4getNth8Bits() public {

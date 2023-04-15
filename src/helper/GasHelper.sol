@@ -9,12 +9,12 @@ abstract contract GasHelper is DSTest {
     uint256 private checkpointGasLeft = 1; // Start the slot warm.
     uint256 private gasUsed;
 
-    function startMeasuringGas(string memory label) internal virtual {
+    function startMeasuringGas(string memory label) public virtual {
         checkpointLabel = label;
         checkpointGasLeft = gasleft();
     }
 
-    function stopMeasuringGas() internal virtual {
+    function stopMeasuringGas() public virtual {
         uint256 checkpointGasLeft2 = gasleft();
 
         // Subtract 100 to account for the warm SLOAD in startMeasuringGas.

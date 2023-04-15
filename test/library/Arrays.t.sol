@@ -8,6 +8,8 @@ import { Helpers } from "src/helper/Helpers.sol";
 contract Arrays_Test is Test, Helpers {
     uint256[] public a;
     uint256[] public b;
+    uint8[] public a8;
+    uint8[] public b8;
 
     function setUp() public {
         assertTrue(IS_TEST);
@@ -20,6 +22,16 @@ contract Arrays_Test is Test, Helpers {
         assertTrue(Arrays.areEquals(_toMemory(a), _toMemory(b)));
 
         b[3] = 1;
+        assertFalse(Arrays.areEquals(_toMemory(a), _toMemory(b)));
+    }
+
+    function test4areEquals_uint8() public {
+        a8 = [0, 1, 2, 3, 4];
+        b8 = [0, 1, 2, 3, 4];
+
+        assertTrue(Arrays.areEquals(_toMemory(a), _toMemory(b)));
+
+        b8[3] = 1;
         assertFalse(Arrays.areEquals(_toMemory(a), _toMemory(b)));
     }
 
@@ -41,6 +53,11 @@ contract Arrays_Test is Test, Helpers {
     }
 
     function test4toString_uint8() public {
+        a = [uint(1), 2, 3];
+        assertEq(Arrays.toString(Arrays.toUint8Array(_toMemory(a))), "[1, 2, 3](3)");
+    }
+
+    function test4fillWithValues() public {
         a = [uint(1), 2, 3];
         assertEq(Arrays.toString(Arrays.toUint8Array(_toMemory(a))), "[1, 2, 3](3)");
     }

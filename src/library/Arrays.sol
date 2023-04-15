@@ -40,7 +40,7 @@ library Arrays {
         return numbers;
     }
 
-    function fillWithValues(
+    /*function fillWithValues(
         uint256[] memory x,
         uint256[] memory values
     ) public pure returns (uint256[] memory) {
@@ -50,7 +50,7 @@ library Arrays {
         }
 
         return x;
-    }
+    }*/
 
     function completeWithZeros(
         uint256[] memory x,

@@ -114,7 +114,7 @@ abstract contract FuzzRecorder is FuzzRecorder {
     }
 
     function _displayTokensIdsForUser(address user) internal {
-        emit log(string.concat("-> user(", _removeUselessZeros(vm.toString(user)), ")"));
+        emit log(string.concat("-> user(", removeUselessZeros(vm.toString(user)), ")"));
         emit log("---------------------------");
         uint256[] memory tokensIds = _getTokensIds(user, TokenType.Team);
         emit log(string.concat("TEAM ", vm.toString(tokensIds.length)));
@@ -138,7 +138,7 @@ abstract contract FuzzRecorder is FuzzRecorder {
                 "Info for ",
                 vm.toString(quantity),
                 "th first users from:",
-                _removeUselessZeros(vm.toString(firstUser))
+                removeUselessZeros(vm.toString(firstUser))
             )
         );
         emit log("+++++++++++++++++++++++++++");

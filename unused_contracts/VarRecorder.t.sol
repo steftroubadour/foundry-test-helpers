@@ -15,7 +15,7 @@ contract VarRecorder_Test is BaseTest {
     function setUp() public {
         _deployNFT();
 
-        runs = _readFoundryTomlValue("[fuzz]", "runs");
+        runs = readFoundryTomlValue("[fuzz]", "runs");
 
         _initialiseStorages();
     }

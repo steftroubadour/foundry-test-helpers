@@ -4,10 +4,32 @@ pragma solidity ^0.8.16;
 
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 import { Test, console } from "forge-std/Test.sol";
-import { TestHelper } from "./TestHelper.sol";
+import { StringHelper } from "./StringHelper.sol";
 
-abstract contract RandomHelper is Test, TestHelper {
-    function _getRandomNumber(uint256 min, uint256 max) internal returns (uint256) {
+abstract contract RandomHelper is Test, StringHelper {
+    function _simpleBound(
+        uint256 x,
+        uint256 min,
+        uint256 max
+    ) internal pure virtual returns (uint256) {
+        if (x >= min && x <= max) return x;
+
+        uint256 size = max - min + 1;
+        uint256 diff;
+        uint256 rem;
+
+        if (x > max) {
+            diff = x - max;
+            rem = diff % size;
+            return min + rem;
+        }
+        // x < min
+        diff = min - x;
+        rem = diff % size;
+        return min + rem;
+    }
+
+    function _getRandomNumber(uint256 min, uint256 max) public returns (uint256) {
         // Works with ffi=true in foundry.toml
         // Called two times in the same function, results will be differents, not true with $RANDOM
         // Problem: Sometimes vm.ffi() with 'shuf' returns bytes of digits between 0x30 and 0x39
@@ -38,10 +60,10 @@ abstract contract RandomHelper is Test, TestHelper {
 
         uint256 randomNumber = areAllBytesNumbers
             ? vm.parseUint(string(result)) // - result is bytes of digits , we use 'string(result)' ex: 0x313435 => "145"
-            : vm.parseUint(_remove0x(vm.toString(result))); // - result is not, we use '_remove0x(vm.toString(result))' ex: 0x75 => "0x75" => "75"
+            : vm.parseUint(remove0x(vm.toString(result))); // - result is not, we use 'remove0x(vm.toString(result))' ex: 0x75 => "0x75" => "75"
 
         // insure that the returned number is in the right range.
-        return bound2(randomNumber, min, max);
+        return _simpleBound(randomNumber, min, max);
     }
 
     // According to this test: test_getDifferentRandomNumbers_withSmallRange
@@ -52,7 +74,7 @@ abstract contract RandomHelper is Test, TestHelper {
         uint256 n,
         uint256 min,
         uint256 max
-    ) internal returns (uint256[] memory) {
+    ) public returns (uint256[] memory) {
         assert(n <= 20 && max >= min + n + 3);
         uint256[] memory tempNumbers = new uint256[](n);
 
@@ -67,7 +89,7 @@ abstract contract RandomHelper is Test, TestHelper {
 
             while (isAlreadyPresent) {
                 isAlreadyPresent = false;
-                randomNumber = bound2(_getRandomNumber(min, max2), min, max);
+                randomNumber = _simpleBound(_getRandomNumber(min, max2), min, max);
 
                 for (uint256 j; j < i; j++) {
                     if (randomNumber == tempNumbers[j]) {
