@@ -3,7 +3,11 @@ src = 'src'
 out = 'out'
 libs = ['lib']
 solc = "0.8.16"
-fs_permissions = [{ access = "read-write", path = "./"}, { access = "read-write", path = "./records/"}]
+fs_permissions = [
+    { access = "read-write", path = "./"},
+    { access = "read-write", path = "./records/"},
+    { access = "read", path = "./test/utils/"},
+]
 # gas_reports = ["Contract_Name"]
 ffi = true
 

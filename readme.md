@@ -4,6 +4,9 @@
 See examples in tests
 
 ## Helpers
+### Artifact helper
+to retrieve information from Contracts artifacts
+
 ### Gas helper
 to mesuring gas
 

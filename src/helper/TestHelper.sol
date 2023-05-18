@@ -3,7 +3,7 @@
 pragma solidity ^0.8.16;
 
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
-import { Test } from "forge-std/Test.sol";
+import { Test, console } from "forge-std/Test.sol";
 import { RandomHelper } from "./RandomHelper.sol";
 
 abstract contract TestHelper is Test, RandomHelper {
@@ -26,8 +26,9 @@ abstract contract TestHelper is Test, RandomHelper {
     }
 
     /// @param x = bound2(number, 10000, 99999);
-    function bound2(uint256 x, uint256 min, uint256 max) public pure virtual returns (uint256) {
+    function bound2(uint256 x, uint256 min, uint256 max) public virtual returns (uint256) {
         uint256 n = _bound2(x, min, max);
+        console.log(n); // /!\ without that test failed !
 
         uint param1 = 8;
         uint param2 = 7;

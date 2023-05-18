@@ -57,6 +57,7 @@ contract StringHelper_Test is Test, TestHelper, VarRecorder, FuzzRecorder {
         string memory str = "0x123De4f78";
         assertEq(t.remove0x(str), "123De4f78");
     }
+
     /*
     function test4removeUselessZeros() public {
         string memory str = "0x0000f78";
@@ -76,4 +77,64 @@ contract StringHelper_Test is Test, TestHelper, VarRecorder, FuzzRecorder {
         // equiv. error
         //assertTrue(areStringsEquals(t.removeUselessZeros(str), "0xf78"));
     }*/
+
+    function testIsContain() public {
+        // string
+        string memory whereString = "A { sentence with ;";
+        assertTrue(t.isContain("{", whereString));
+        assertTrue(t.isContain("sentence", whereString));
+        assertFalse(t.isContain("boat", whereString));
+
+        // array
+        string[] memory whereArray = new string[](3);
+        whereArray[0] = "azerty";
+        whereArray[1] = "qwerty";
+        whereArray[2] = "apple";
+
+        assertTrue(t.isContain("azerty", whereArray));
+        assertFalse(t.isContain("boat", whereArray));
+    }
+
+    function testGetPositionStringContained() public {
+        string memory whereString = "A { sentence with ;";
+        assertEq(t.getPositionStringContained("A", whereString), 1);
+        assertEq(t.getPositionStringContained("sentence", whereString), 5);
+        assertEq(t.getPositionStringContained("boat", whereString), 0);
+    }
+
+    function testFindFirstCharPositionAfter() public {
+        string memory whereString = "A { sentence with ;";
+        assertEq(t.findFirstCharPositionAfter("A", 1, whereString), 1);
+        assertEq(t.findFirstCharPositionAfter("w", 3, whereString), 14);
+        assertEq(t.findFirstCharPositionAfter("b", 1, whereString), 0);
+    }
+
+    function testFindFirstCharPositionBefore() public {
+        string memory whereString = "A { sentence with ;";
+        uint whereStringLength = bytes(whereString).length;
+        assertEq(
+            t.findFirstCharPositionBefore(";", whereStringLength, whereString),
+            whereStringLength
+        );
+        assertEq(t.findFirstCharPositionBefore("e", 14, whereString), 12);
+        assertEq(t.findFirstCharPositionBefore("b", 14, whereString), 0);
+    }
+
+    function testHexStringToUint() public {
+        assertEq(t.hexStringToUint("e"), 14);
+        assertEq(t.hexStringToUint("10"), 16);
+        vm.expectRevert("Invalid input");
+        t.hexStringToUint(";");
+    }
+
+    function testHexString8ToBytes4() public {
+        assertTrue(
+            areStringsEquals(
+                vm.toString(t.hexString8ToBytes4("fb969b0a")),
+                vm.toString(bytes4(hex"fb969b0a"))
+            )
+        );
+        vm.expectRevert("Invalid input");
+        t.hexString8ToBytes4("fbF69b0a");
+    }
 }
